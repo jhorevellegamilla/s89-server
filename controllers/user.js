@@ -3,7 +3,7 @@ const User = require('../models/User');
 const { createAccessToken } = require('../auth');
 
 
-exports.register = async (req, res) => {
+module.exports.register = async (req, res) => {
     try {
         const { email, username, password } = req.body;
         const existingUser = await User.findOne({ email });
@@ -18,18 +18,22 @@ exports.register = async (req, res) => {
 };
 
 
-exports.login = async (req, res) => {
+module.exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
         const user = await User.findOne({ email });
         if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-        const token = createAccessToken(user);
+        const token = createAccessToken(user.toObject());
+
         res.json({ token });
     } catch (err) {
+        console.error("LOGIN ERROR:", err);
         res.status(500).json({ error: err.message });
     }
 };
+
