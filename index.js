@@ -40,7 +40,7 @@ app.use("/comments", commentRoutes);
 app.use("/users", userRoutes);
 
 //[SECTION] Database Connection 
-mongoose.connect(process.env.MONGODB_STRING);
+mongoose.connect(process.env.MONGODB_URI);
 
 //Database Connection
 mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atlas.'));
